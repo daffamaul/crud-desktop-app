@@ -43,10 +43,8 @@ public class UpdateMahasiswa extends javax.swing.JFrame {
             
             while (rst.next()) {                
                 tfNama.setText(rst.getString("nama"));
-//                tfNIM.setText(rst.getString("nim"));
                 tfNomorHP.setText(rst.getString("nomor_hp"));
-                tfTTL.setText(rst.getString("ttl"));
-                
+                tfTTL.setText(rst.getString("ttl"));                
                 taAlamat.setText(rst.getString("alamat"));
                 cbxProdi.setSelectedItem(rst.getString("prodi"));
                 
@@ -89,6 +87,7 @@ public class UpdateMahasiswa extends javax.swing.JFrame {
         tfNomorHP = new javax.swing.JTextField();
         tfTTL = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -125,6 +124,13 @@ public class UpdateMahasiswa extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Back");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBack(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -135,7 +141,7 @@ public class UpdateMahasiswa extends javax.swing.JFrame {
                 .addGap(130, 130, 130))
             .addGroup(layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel5)
@@ -155,7 +161,10 @@ public class UpdateMahasiswa extends javax.swing.JFrame {
                                     .addComponent(tfNomorHP, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)))
                             .addComponent(cbxProdi, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButton1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(40, 40, 40)
@@ -193,7 +202,9 @@ public class UpdateMahasiswa extends javax.swing.JFrame {
                     .addComponent(jLabel9)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 96, Short.MAX_VALUE)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addGap(16, 16, 16))
         );
 
@@ -223,6 +234,13 @@ public class UpdateMahasiswa extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_btnUpdate
+
+    private void btnBack(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBack
+        // TODO add your handling code here:
+        CRUDMahasiswa main = new CRUDMahasiswa();
+        main.setVisible(true);
+        this.dispose();
+    }//GEN-LAST:event_btnBack
 
     /**
      * @param args the command line arguments
@@ -265,6 +283,7 @@ public class UpdateMahasiswa extends javax.swing.JFrame {
     private javax.swing.JRadioButton cbWanita;
     private javax.swing.JComboBox<String> cbxProdi;
     public javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;

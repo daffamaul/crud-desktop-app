@@ -252,25 +252,17 @@ public class CRUDMahasiswa extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     
     private void tampilData() {
-        DefaultTableModel kolomTabel = new DefaultTableModel();
-        kolomTabel.addColumn("No");
-        kolomTabel.addColumn("Nama");
-        kolomTabel.addColumn("NIM");
-        kolomTabel.addColumn("TTL");
-        kolomTabel.addColumn("Nomor");
-        kolomTabel.addColumn("JK");
-        kolomTabel.addColumn("Prodi");
-        kolomTabel.addColumn("Alamat");
+        DefaultTableModel kolomTabel = (DefaultTableModel) tblMahasiswa.getModel();        
+        kolomTabel.setRowCount(0);
         
         try {    
             int nomor = 1;
             
-            stm = conn.createStatement();
-            sql = "SELECT * FROM mahasiswa";
-            rst = stm.executeQuery(sql);
+            PreparedStatement pStm = conn.prepareStatement("SELECT * FROM mahasiswa");            
+            rst = pStm.executeQuery();
             
-            while (rst.next()) {                                
-                kolomTabel.addRow(new Object[] {
+            while (rst.next()) {  
+                Object[] rowData = {
                     Integer.toString(nomor),
                     rst.getString("nama"),
                     rst.getString("nim"),
@@ -279,14 +271,12 @@ public class CRUDMahasiswa extends javax.swing.JFrame {
                     rst.getString("jenis_kelamin"),
                     rst.getString("prodi"),
                     rst.getString("alamat"),
-                });
+                };
                 
-                tblMahasiswa.setModel(kolomTabel);
-                tblMahasiswa.enable(true);
-                tfNama.requestFocus();
+                kolomTabel.addRow(rowData);
                 
                 nomor++;                
-            }
+            }            
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
         }
@@ -306,33 +296,41 @@ public class CRUDMahasiswa extends javax.swing.JFrame {
         // TODO add your handling code here:
         String nim = JOptionPane.showInputDialog("Masukan NIM: ");
         
-        UpdateMahasiswa formUpdate = new UpdateMahasiswa(nim);
-        formUpdate.setVisible(true);
-        this.dispose();
-        
+        try {
+            PreparedStatement pStm = conn.prepareStatement("SELECT nim FROM mahasiswa WHERE nim = ?");
+            pStm.setString(1, nim);            
+            rst = pStm.executeQuery();
+            
+            if(rst.next()) {
+                UpdateMahasiswa formUpdate = new UpdateMahasiswa(nim);
+                formUpdate.setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(null, "Data tidak ditemukan");              
+            }                                                   
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, e);
+        }                        
     }//GEN-LAST:event_btnUbah
 
     private void btnHapus(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHapus
         // TODO add your handling code here:
-        String nim = JOptionPane.showInputDialog("Masukan NIM: ");
-        
-        if(nim.isEmpty()) {
-            JOptionPane.showMessageDialog(null, "Tidak ada data yang dihapus");
-            return;
-        }
+        String nim = JOptionPane.showInputDialog("Masukan NIM: ");                
         
         try {
             PreparedStatement pStm = conn.prepareStatement("DELETE FROM mahasiswa WHERE nim = ?");
-            pStm.setString(1, nim);           
-            pStm.executeUpdate();
+            pStm.setString(1, nim);            
+            int isSuccess = pStm.executeUpdate();
             
-            JOptionPane.showMessageDialog(null, "Data berhasil dihapus");
-            
-            tampilData();
+            if(isSuccess > 0) {
+                JOptionPane.showMessageDialog(null, "Data berhasil dihapus");              
+                tampilData();
+            } else {
+                JOptionPane.showMessageDialog(null, "Data tidak ditemukan");              
+            }                                                   
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, e);
-        }
-        
+        }                     
     }//GEN-LAST:event_btnHapus
 
     private void btnSubmit(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmit
@@ -352,11 +350,17 @@ public class CRUDMahasiswa extends javax.swing.JFrame {
             jenis_kelamin = "wanita";
         }
         
-        try {
-            sql = "INSERT INTO mahasiswa (nama, nim, ttl, nomor_hp, jenis_kelamin, prodi, alamat) VALUES ";
-            sql += "('" + nama + "', '" + nim + "', '" + ttl + "', '" + no_hp + "', '" + jenis_kelamin + "', '" + prodi + "', '" + alamat + "')" ;       
-            stm = conn.createStatement();
-            stm.executeUpdate(sql);
+        try {           
+            PreparedStatement pStm = conn.prepareStatement("INSERT INTO mahasiswa VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+            pStm.setString(1, null);
+            pStm.setString(2, nama);            
+            pStm.setString(3, nim);
+            pStm.setString(4, ttl);
+            pStm.setString(5, no_hp);            
+            pStm.setString(6, jenis_kelamin);
+            pStm.setString(7, String.valueOf(cbxProdi.getSelectedItem()));
+            pStm.setString(8, alamat);
+            pStm.executeUpdate();
             
             JOptionPane.showMessageDialog(null, "Data berhasil disimpan");
             
