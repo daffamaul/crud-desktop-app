@@ -18,8 +18,8 @@ public class DBConnection {
     public static Connection getConnection() {               
         try {                                    
             String url = "jdbc:mysql://localhost:3306/netbeans_kampus";
-            String username = "debian-sys-maint";
-            String password = "dW3vBW9UEDoHBRXs";
+            String username = "root";
+            String password = "";
             conn = DriverManager.getConnection(url, username, password);
             
             JOptionPane.showMessageDialog(null, "Database connection successfully...");
